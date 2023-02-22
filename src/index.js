@@ -1,12 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom'
-import Home from './Functional/Home';
+import { BrowserRouter  } from 'react-router-dom';
+import Routes from './Functional/Home';
 import './index.css';
 
-// react 17 
+import 'bootstrap/dist/css/bootstrap.min.css'
+
+// react 16.2 
 
 ReactDOM.render(
-    <Home></Home>,
+    <BrowserRouter>
+        <Routes></Routes>
+    </BrowserRouter>,
     document.getElementById('root')
 )
 
@@ -14,7 +19,9 @@ ReactDOM.render(
 // const root = ReactDOM.createRoot(document.getElementById('root'));
 // root.render(
 //   <React.StrictMode>
-//     <Home></Home>
+//      <BrowserRouter>
+//         <Routes></Routes>
+//     </BrowserRouter>
 //   </React.StrictMode>
 // );
 
