@@ -18,11 +18,13 @@ const Routes = () => {
                 <Container>
                     <Navbar.Brand>Github Users</Navbar.Brand>
                     <Nav>
-                    <Nav.Link> <Link to="/">Home</Link></Nav.Link>
+                        <Nav.Link> <Link to="/">Home</Link></Nav.Link>
                         <Nav.Link><Link to="/about">About</Link></Nav.Link>
                         <Nav.Link><Link to="/about">About</Link></Nav.Link>
                         <Nav.Link><Link to="/contact">Contact</Link></Nav.Link>
                         <Nav.Link><Link to="/githubusers">Github Users</Link></Nav.Link>
+                        <Nav.Link><Link to="/newgithubusers">New Github Users</Link></Nav.Link>
+                        <Nav.Link><Link to="/topics">Topics</Link></Nav.Link>
                     </Nav>
                 </Container>
             </Navbar>
@@ -33,11 +35,120 @@ const Routes = () => {
                 <Route path="/about"> <About></About> </Route>
                 <Route path="/contact"><Contact></Contact> </Route>
                 <Route path="/githubusers"><GithubUsers></GithubUsers> </Route>
+                <Route path="/newgithubusers"><NewGitHubList></NewGitHubList> </Route>
+                <Route path="/topics"> <Topics></Topics> </Route>
+                <Route path="/component1"> <Component1></Component1> </Route>
+                <Route path="/component2"> <Component2></Component2> </Route>
+
                 <Route path="/:blablabla"> <UsersDetails></UsersDetails> </Route>
+           
             </Switch>
         </>
     )
 }
+
+
+const NewGitHubList = () => {
+    const [users, setUsers] = useState([]) // hoot for state 
+    const [rerender, setRerender] = useState(true)
+    // hook for perfomning the side by side effect 
+    // it is mililar to componentdidmount and componentdidupdate of class based components
+    useEffect(
+
+        () => {
+            var requestOptions = {
+                method: 'GET',
+                redirect: 'follow'
+            };
+
+            fetch("https://api.github.com/users", requestOptions)
+                .then(response => response.json())
+                .then(result => {
+                    setUsers(result)
+                    console.log("Response User Items", result)
+                })
+                .catch(error => console.log('error', error));
+        }, [])
+
+    const stateHandleer = () => {
+        setRerender(rerender == false)
+    }
+// render is displayed first time, then after the USEEFFET() is executed, and then the inside useEffet(), fetch and  updated useState(), and then RE-RENDER again
+// first time , users is empty then render loading... , after users is update by useEffet , then render second time
+
+    return (
+        <>
+            <Container>
+                {users ? <>
+                <Row>
+                    {users.map((item, index) => {
+                        return (
+                          <Col md={4}  key={item.login} >
+                            <Card style={{ width: "18rem" }}>
+                                <Card.Img variant="top" src={item.avatar_url}></Card.Img>
+                                <Card.Body>
+                                    <Card.Title> <Link to={item.login}>{item.login}</Link> </Card.Title>                                    
+                                </Card.Body>
+                            </Card>
+                        </Col>
+                        )
+                    })}
+                </Row>                                   
+                    
+                </> : "...... Loading"}
+            </Container>
+
+        </>
+    )
+
+}
+
+
+
+function Child() {
+    // We can use the `useParams` hook here to access
+    // the dynamic pieces of the URL.
+    let { id } = useParams();
+  
+    return (
+      <div>
+        <h3>ID: {id}</h3>
+      </div>
+    );
+  }
+
+
+const Topics = () => {
+    return (
+        <Router>
+
+        <div>
+            <p><Link to={"/component1"}> Component1</Link></p>
+            <p><Link to={"/component2"}> Component2</Link></p>
+        </div>
+        <Switch>
+            <Route path="/:id" children={<Child />} />
+        </Switch>
+        </Router>
+    )
+}
+
+const Component1 = () => {
+    return (
+        <div>
+            <h1> I'm in the component 1 </h1>
+        </div>
+    )
+}
+
+const Component2 = () => {
+    return (
+        <div>
+            <h1> I'm in the component 2 </h1>
+        </div>
+    )
+}
+
 
 const UsersDetails = ()=>{
     const [user, setUser] = useState({}) // hook for state
@@ -154,7 +265,6 @@ const GithubUsers = () => {
     const [rerender, setRerender] = useState(true)
     // hook for perfomning the side by side effect 
     // it is mililar to componentdidmount and componentdidupdate of class based components
-
     useEffect(
 
         () => {
@@ -175,13 +285,14 @@ const GithubUsers = () => {
     const stateHandleer = () => {
         setRerender(rerender == false)
     }
+// render is displayed first time, then after the USEEFFET() is executed, and then the inside useEffet(), fetch and  updated useState(), and then RE-RENDER again
+// first time , users is empty then render loading... , after users is update by useEffet , then render second time
 
     return (
         <>
             <Container>
-
                 {users ? <>
-<Row>
+                <Row>
                     {users.map((item, index) => {
                         return (
                           <Col md={4}  key={item.login} >
@@ -189,17 +300,14 @@ const GithubUsers = () => {
                                 <Card.Img variant="top" src={item.avatar_url}></Card.Img>
                                 <Card.Body>
                                     <Card.Title> <Link to={item.login}>{item.login}</Link> </Card.Title>                                    
-
                                 </Card.Body>
                             </Card>
-                            </Col>
+                        </Col>
                         )
                     })}
-     </Row>                                   
+                </Row>                                   
                     
                 </> : "...... Loading"}
-
-
             </Container>
 
         </>
