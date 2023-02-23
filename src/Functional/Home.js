@@ -8,19 +8,20 @@ import {
     Switch,
     Route,
     Link,
-    useParams
+    useParams,
+    useRouteMatch
 } from "react-router-dom"  // BrowserRouter
 
 const Routes = () => {
+
     return (
         <>
             <Navbar bg="danger" variant="light">
                 <Container>
                     <Navbar.Brand>Github Users</Navbar.Brand>
                     <Nav>
-                        <Nav.Link> <Link to="/">Home</Link></Nav.Link>
-                        <Nav.Link><Link to="/about">About</Link></Nav.Link>
-                        <Nav.Link><Link to="/about">About</Link></Nav.Link>
+                    <Nav.Link> <Link to="/">Home</Link></Nav.Link>
+                        <Nav.Link><Link to="/about">About</Link></Nav.Link>                        
                         <Nav.Link><Link to="/contact">Contact</Link></Nav.Link>
                         <Nav.Link><Link to="/githubusers">Github Users</Link></Nav.Link>
                         <Nav.Link><Link to="/newgithubusers">New Github Users</Link></Nav.Link>
@@ -32,16 +33,12 @@ const Routes = () => {
             <Switch>
                 
                 <Route exact path="/"> <Home></Home> </Route>
+                <Route exact path="/githubusers"><GithubUsers></GithubUsers> </Route>
                 <Route path="/about"> <About></About> </Route>
                 <Route path="/contact"><Contact></Contact> </Route>
-                <Route path="/githubusers"><GithubUsers></GithubUsers> </Route>
-                <Route path="/newgithubusers"><NewGitHubList></NewGitHubList> </Route>
-                <Route path="/topics"> <Topics></Topics> </Route>
-                <Route path="/component1"> <Component1></Component1> </Route>
-                <Route path="/component2"> <Component2></Component2> </Route>
-
-                <Route path="/:blablabla"> <UsersDetails></UsersDetails> </Route>
-           
+                <Route  path="/githubusers/:id">
+                    <UsersDetails/>
+                </Route>
             </Switch>
         </>
     )
@@ -152,7 +149,7 @@ const Component2 = () => {
 
 const UsersDetails = ()=>{
     const [user, setUser] = useState({}) // hook for state
-    let {blablabla}= useParams();
+    let {id}= useParams();
 
     useEffect(()=>{
         var requestOptions = {
@@ -160,7 +157,7 @@ const UsersDetails = ()=>{
             redirect: 'follow'
         };
 
-        fetch(`https://api.github.com/users/${blablabla}`, requestOptions)
+        fetch(`https://api.github.com/users/${id}`, requestOptions)
             .then(response => response.json())
             .then(result => {
                 setUser(result)                
@@ -263,6 +260,7 @@ const Contact = () => {
 const GithubUsers = () => {
     const [users, setUsers] = useState([]) // hoot for state 
     const [rerender, setRerender] = useState(true)
+    let {path, url} = useRouteMatch()
     // hook for perfomning the side by side effect 
     // it is mililar to componentdidmount and componentdidupdate of class based components
     useEffect(
@@ -299,7 +297,8 @@ const GithubUsers = () => {
                             <Card style={{ width: "18rem" }}>
                                 <Card.Img variant="top" src={item.avatar_url}></Card.Img>
                                 <Card.Body>
-                                    <Card.Title> <Link to={item.login}>{item.login}</Link> </Card.Title>                                    
+                                    <Card.Title> <Link to={`${path}/${item.login}`}>{item.login}</Link> </Card.Title>                                    
+
                                 </Card.Body>
                             </Card>
                         </Col>
@@ -309,7 +308,7 @@ const GithubUsers = () => {
                     
                 </> : "...... Loading"}
             </Container>
-
+    
         </>
     )
 
