@@ -26,6 +26,7 @@ const Routes = () => {
                         <Nav.Link><Link to="/githubusers">Github Users</Link></Nav.Link>
                         <Nav.Link><Link to="/newgithubusers">New Github Users</Link></Nav.Link>
                         <Nav.Link><Link to="/topics">Topics</Link></Nav.Link>
+                        
                     </Nav>
                 </Container>
             </Navbar>
@@ -34,11 +35,15 @@ const Routes = () => {
                 
                 <Route exact path="/"> <Home></Home> </Route>
                 <Route exact path="/githubusers"><GithubUsers></GithubUsers> </Route>
+                <Route exact path="/newgithubusers"><NewGitHubList></NewGitHubList> </Route>
                 <Route path="/about"> <About></About> </Route>
                 <Route path="/contact"><Contact></Contact> </Route>
-                <Route  path="/githubusers/:id">
+                <Route path="/topics"><Topics></Topics> </Route>
+                 <Route  path="/githubusers/:id"> 
                     <UsersDetails/>
                 </Route>
+                <Route path="/newgithubusers/:id"  ><UsersDetails /></Route>
+
             </Switch>
         </>
     )
@@ -77,20 +82,38 @@ const NewGitHubList = () => {
         <>
             <Container>
                 {users ? <>
-                <Row>
+                <h6>New Github list</h6>
+                <Router>
+                    <div>
+                {/* <Row> */}
+
                     {users.map((item, index) => {
                         return (
-                          <Col md={4}  key={item.login} >
-                            <Card style={{ width: "18rem" }}>
-                                <Card.Img variant="top" src={item.avatar_url}></Card.Img>
-                                <Card.Body>
-                                    <Card.Title> <Link to={item.login}>{item.login}</Link> </Card.Title>                                    
-                                </Card.Body>
-                            </Card>
-                        </Col>
+                    <p>
+                      {/* <img  src={item.avatar_url} ></img> */}
+
+                      <Link to={`newgithubusers/${item.login}`}>{item.login}</Link>
+
+                      </p>
+                        //   <Col md={4}  key={item.login} >
+                        //     <Card style={{ width: "18rem" }}>
+                        //         <Card.Img variant="top" src={item.avatar_url}></Card.Img>
+                        //         <Card.Body>
+                        //             <Card.Title> <Link to={item.login}>{item.login}</Link> </Card.Title>                                    
+                        //         </Card.Body>
+                        //     </Card>
+                        //   </Col>
+                            
                         )
-                    })}
-                </Row>                                   
+                    })
+                    }
+
+
+                {/* </Row>   */}
+                </div>                                 
+                    <Switch>
+                    </Switch>
+                </Router>
                     
                 </> : "...... Loading"}
             </Container>
